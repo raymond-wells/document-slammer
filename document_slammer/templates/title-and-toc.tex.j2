@@ -1,0 +1,11 @@
+\documentclass{book}[letterpaper]
+\title{ {{-config.title -}} }
+\begin{document}
+\maketitle
+\clearpage
+\pagestyle{empty}
+\noindent{\bfseries{\huge Contents}\hfill Page No. \vspace \bigskipamount \par}
+{% for include in context.includes %}
+\contentsline{chapter}{ {{- include.heading -}} } {\numberline{ {{- include.start_page -}} }}{1}
+{% endfor %}
+\end{document}

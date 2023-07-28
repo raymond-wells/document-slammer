@@ -1,0 +1,28 @@
+PDF_INPUTS := title-and-toc.pdf {% for file in config.includes %}{{file.path}} {%endfor%}
+PADDING := {%for n in range(context.filler_page_count)%}{{context.filler_page}} {%endfor%}
+
+all: {{context.output_base}}.pdf
+
+combined.pdf: $(PDF_INPUTS) {{context.filler_page}}
+	pdfunite $(PDF_INPUTS) $(PADDING) combined.pdf
+
+title-and-toc.pdf: title-and-toc.tex
+	pdflatex title-and-toc.tex
+
+combined.ps: combined.pdf
+	pdftops combined.pdf
+
+numbered.ps: combined.ps
+	awk 'BEGIN {page = 1; startPage=3} /^showpage/ {if (page % 2 == 0) {pos = 50} else {pos = 550}; if (page >= startPage) {print "/Helvetica findfont 16 scalefont setfont\n" pos " 25 moveto\n(" page ") show\nshowpage";} else {print $0;} page += 1} !/^showpage/ {print $0}' combined.ps > numbered.ps
+
+book.ps: numbered.ps
+	psbook numbered.ps > book.ps
+
+{{context.output_base}}.ps: book.ps
+	psnup -2 --transpose book.ps {{context.output_base}}.ps
+
+{{context.output_file}}: {{context.output_base}}.ps
+	ps2pdf {{context.output_base}}.ps
+
+clean:
+	rm -f {{context.output_base}}.ps {{context.output_file}} numbered.ps combined.ps book.ps
