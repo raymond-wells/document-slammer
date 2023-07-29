@@ -6,6 +6,15 @@ Overview
 
 Combines separate PDFs into a booklet format with page numbering and table of contents. Works well in conjunction with tools like pandoc to create printable reference guides comprising materials from disparate sources.
 
+Requirements
+============
+
+* Python 3.10
+* Poetry
+* PDFLaTeX
+* Poppler Utils
+* awk
+
 Installation
 ============
 
@@ -23,12 +32,14 @@ In order to use this tool, you will need to create a configuration in a root dir
 Here is the recommended layout:
 
 * Root Directory
-  * ``doc.yaml``
-  * ``documents``
-    * ``doc-1.pdf``
-    * ``doc-2.pdf``
 
-And, given the above structure, here is a sample ``doc.yaml``. A full schema reference is below.
+  - ``doc.yaml``
+  - ``documents``
+
+    - ``doc-1.pdf``
+    - ``doc-2.pdf``
+
+And, given the above structure, here is a sample ``doc.yaml``. See `Schema <schema.rst>`_ for a full schema reference.
 
 .. code-block:: yaml
 
@@ -40,7 +51,15 @@ And, given the above structure, here is a sample ``doc.yaml``. A full schema ref
        heading: Some blog somewhere
 
 
-Definition Schema
-=================
+Now, sync the project:
 
-.. include:: schema.rst
+.. code-block:: shell
+
+    python -m document_slammer sync doc.yaml
+
+And, finally, run ``make`` to build ``Booklet.pdf``.
+
+Printing
+========
+
+Print the booklet with double sided printing on, binding on **Short Edge**. Most double sided printers will default to long-edge binding, which is not compatible.
