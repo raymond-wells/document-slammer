@@ -1,0 +1,26 @@
+$schema: "https://json-schema.org/draft/2020-12"
+type: object
+additionalProperties: false
+required:
+  - title
+  - includes
+properties:
+  title:
+    type: string
+  number_font:
+    type: string
+  includes:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      properties:
+        path:
+          type: string
+          minLength: 1
+        heading:
+          type: string
+          minLength: 1
+      required:
+        - path
+        - heading
